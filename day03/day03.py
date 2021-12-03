@@ -1,59 +1,67 @@
 #!/usr/bin/env python
 
 import copy
+import math
+
+def _count(data, position):
+  """How many zeroes, how many ones.
+
+   Inspects each entry of an array and counts the occurrences of
+   '0' and '1' at a specific position.
+
+   Returns:
+    number of zeroes
+    number of ones.
+  """
+  return (
+    [line[position] for line in data].count('0'),
+    [line[position] for line in data].count('1')
+  )
+
+
+def _most_common_bit(data, position):
+  """What is the most common bit at a specific position.
+
+  If equal number of 0s and 1s, return 1.
+
+  Returns:
+   int.
+  """
+  zeroes, ones = _count(data, position)
+  return int(zeroes == ones or zeroes < ones)
+
 
 def part1(data):
-    gamma = epsilon = ''
-    pos = 0
-    while pos < len(data[0]):
-        s = ''.join([x[pos] for x in data])
-        if s.count('0') >= s.count('1'):
-            gamma = '%s%s' % (gamma, 0)
-            epsilon = '%s%s' % (epsilon, 1)
-        else:
-            gamma = '%s%s' % (gamma, 1)
-            epsilon = '%s%s' % (epsilon, 0)
-        pos += 1
-    gamma = int(gamma, 2)
-    epsilon = int(epsilon, 2)
-    output = gamma * epsilon
-    return output
+  gamma = epsilon = 0
+  for x, _ in enumerate(data[0]):
+    gamma = gamma * 2 + _most_common_bit(data, x)
+    epsilon = epsilon * 2 + int(not _most_common_bit(data, x))
+  print(gamma)
+  return gamma * epsilon
 
-def _bit_criteria(data, pos, o=True):
-    s = ''.join([x[pos] for x in data])
-    if o:
-        if s.count('0') > s.count('1'):
-            data = filter(lambda x: x[pos] == '0', data)
-        else:
-            data = filter(lambda x: x[pos] == '1', data)
-    else:
-        if s.count('0') <= s.count('1'):
-            data = filter(lambda x: x[pos] == '0', data)
-        else:
-            data = filter(lambda x: x[pos] == '1', data)
 
-    print(data)
-    return data
+def _bit_criteria(data, pos, rating='oxygen'):
+  if rating == 'oxygen':
+    return list(filter(
+        lambda x: int(x[pos]) == _most_common_bit(data, pos),
+        data))
+  return list(filter(
+      lambda x: int(x[pos]) != _most_common_bit(data, pos),
+      data))
+
 
 def part2(data):
-    gamma = epsilon = ''
-    o2_data = copy.copy(data)
-    co2_data = copy.copy(data)
-    pos = 0
-    while len(o2_data) > 1:
-        o2_data = _bit_criteria(o2_data, pos)
-        pos += 1
-    pos = 0
-    while len(co2_data) > 1:
-        co2_data = _bit_criteria(co2_data, pos, False)
-        pos += 1
-
-    return int(o2_data[0], 2) * int(co2_data[0], 2)
-
-    output = ''
-    for line in data:
-        pass
-    return output
+  o2_data = copy.copy(data)
+  co2_data = data
+  pos = 0
+  while len(o2_data) > 1:
+    o2_data = _bit_criteria(o2_data, pos)
+    pos += 1
+  pos = 0
+  while len(co2_data) > 1:
+    co2_data = _bit_criteria(co2_data, pos, 'co2')
+    pos += 1
+  return int(o2_data[0], 2) * int(co2_data[0], 2)
 
 
 def main():
