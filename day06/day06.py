@@ -51,5 +51,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-# 504500683588 too low
-# 1644874076764
