@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
-from collections import Counter
+import time
+
 
 def part1(data):
     fishes = [int(x) for x in data[0].split(',')]
@@ -21,6 +22,11 @@ def part1(data):
 
 
 def part2(data):
+    """The list gets too large, I implement a counter of timers.
+    1st element of the list is the number of items set to 0, etc...
+    Every day, list[0] is added at list[6] (reset the timers)
+    and also added at list[8] for the new fishes.
+    """
     fishes = sorted(data[0].replace(',', ''))
     day = 1
     timers =[0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -35,8 +41,12 @@ def part2(data):
 
 def main():
     data = [line.strip() for line in open('input.txt', 'r').readlines()]
-    print('Part 1: %s' % part1(data))
-    print('Part 2: %s' % part2(data))
+    start = time.perf_counter()
+    print('Part 1: %s' % part1(data), end=' ')
+    print ('[%05f secs]' % (time.perf_counter() - start))
+    start = time.perf_counter()
+    print('Part 2: %s' % part2(data), end=' ')
+    print ('[%05f secs]' % (time.perf_counter() - start))
 
 
 if __name__ == "__main__":
