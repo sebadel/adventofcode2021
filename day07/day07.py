@@ -4,6 +4,7 @@ import math
 import numpy
 import time
 
+
 def part1(data):
     positions = [int(x) for x in data[0].split(',')]
     min_cost = None
@@ -45,6 +46,7 @@ def part3(data): # 0.025 secs
             fuel += c
     return fuel
 
+
 def main():
     data = [line.strip() for line in open('input.txt', 'r').readlines()]
     start = time.perf_counter()
@@ -58,6 +60,7 @@ def main():
     start = time.perf_counter()
     print('Part 3: %s' % part3(data), end=' ')
     print ('[%05f secs]' % (time.perf_counter() - start))
+
 
 if __name__ == "__main__":
     main()
